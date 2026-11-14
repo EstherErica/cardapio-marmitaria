@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cardápio digital — Marmitaria Sabor de Casa (exemplo)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --verde:#3f6b3a; --verde-esc:#2c4d29; --verde-claro:#e6efe2;
+    --creme:#faf6ec; --papel:#fffdf7; --texto:#2a2a24; --suave:#6d6a5e;
+    --linha:#e8e1cf; --laranja:#d9822b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Nunito',system-ui,sans-serif;background:var(--creme);color:var(--texto);padding-bottom:110px}
+  .demo{background:var(--laranja);color:#fff;text-align:center;font-size:12px;font-weight:700;padding:6px 10px;letter-spacing:.3px}
+  header{background:var(--verde);color:#fff;padding:26px 20px 34px;text-align:center;border-radius:0 0 28px 28px;position:relative}
+  .logo{width:78px;height:78px;border-radius:50%;background:var(--creme);border:3px solid #fff;margin:0 auto 12px;display:grid;place-items:center;font-size:38px;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+  h1{font-family:'Fraunces',serif;font-size:26px;line-height:1.1}
+  .slogan{opacity:.9;font-size:14px;margin-top:4px}
+  .chips{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+  .chip{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);padding:5px 11px;border-radius:99px;font-size:12px;font-weight:700}
+  .aberto{background:#fff;color:var(--verde)}
+  nav{position:sticky;top:0;z-index:5;background:var(--creme);display:flex;gap:8px;overflow-x:auto;padding:14px 16px 10px;scrollbar-width:none}
+  nav::-webkit-scrollbar{display:none}
+  nav a{flex:none;text-decoration:none;color:var(--verde-esc);background:var(--papel);border:1px solid var(--linha);padding:8px 14px;border-radius:99px;font-weight:700;font-size:14px}
+  nav a.ativo{background:var(--verde);color:#fff;border-color:var(--verde)}
+  main{max-width:640px;margin:0 auto;padding:0 16px}
+  h2{font-family:'Fraunces',serif;font-size:20px;color:var(--verde-esc);margin:22px 4px 10px;scroll-margin-top:70px}
+  .dia{background:var(--verde-claro);border-radius:14px;padding:12px 14px;font-size:14px;margin-top:6px}
+  .dia b{color:var(--verde-esc)}
+  .item{background:var(--papel);border:1px solid var(--linha);border-radius:16px;padding:12px;display:flex;gap:12px;align-items:center;margin-bottom:10px}
+  .foto{flex:none;width:66px;height:66px;border-radius:12px;background:var(--verde-claro);display:grid;place-items:center;font-size:32px}
+  .info{flex:1;min-width:0}
+  .nome{font-weight:800;font-size:15px}
+  .desc{color:var(--suave);font-size:13px;line-height:1.35;margin-top:2px}
+  .preco{color:var(--verde);font-weight:800;margin-top:4px}
+  .qtd{display:flex;align-items:center;gap:6px;flex:none}
+  .qtd button{width:32px;height:32px;border-radius:50%;border:none;font-size:18px;font-weight:800;cursor:pointer;background:var(--verde-claro);color:var(--verde-esc)}
+  .qtd button.mais{background:var(--verde);color:#fff}
+  .qtd span{min-width:18px;text-align:center;font-weight:800}
+  .qtd span.zero, .qtd button.menos.zero{visibility:hidden}
+  .tag{display:inline-block;background:#fdebd6;color:#a65b13;font-size:11px;font-weight:800;padding:2px 7px;border-radius:6px;margin-left:4px;vertical-align:middle}
+  .barra{position:fixed;left:0;right:0;bottom:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--creme) 30%);z-index:10}
+  .barra button{width:100%;max-width:640px;display:flex;margin:0 auto;justify-content:space-between;align-items:center;background:var(--verde);color:#fff;border:none;border-radius:16px;padding:16px 18px;font:800 16px 'Nunito',sans-serif;cursor:pointer;box-shadow:0 8px 20px rgba(44,77,41,.3)}
+  .barra button:disabled{background:#a9b5a6;box-shadow:none;cursor:default}
+  .badge{background:#fff;color:var(--verde);border-radius:99px;padding:2px 9px;font-size:13px;margin-right:8px}
+  /* checkout */
+  .fundo{position:fixed;inset:0;background:rgba(20,25,18,.5);z-index:20;display:none;align-items:flex-end;justify-content:center}
+  .fundo.on{display:flex}
+  .painel{background:var(--papel);width:100%;max-width:640px;max-height:92vh;overflow:auto;border-radius:24px 24px 0 0;padding:20px 18px calc(24px + env(safe-area-inset-bottom))}
+  .topo{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+  .topo h3{font-family:'Fraunces',serif;font-size:21px;color:var(--verde-esc)}
+  .fechar{background:var(--verde-claro);border:none;width:34px;height:34px;border-radius:50%;font-size:18px;cursor:pointer;color:var(--verde-esc)}
+  .linha{display:flex;justify-content:space-between;font-size:14px;padding:6px 0;border-bottom:1px dashed var(--linha)}
+  .total{display:flex;justify-content:space-between;font-weight:800;font-size:17px;margin:10px 0 4px}
+  label{display:block;font-weight:800;font-size:13px;margin:14px 0 6px}
+  input,textarea,select{width:100%;padding:12px;border:1px solid var(--linha);border-radius:12px;font:15px 'Nunito',sans-serif;background:#fff}
+  textarea{resize:vertical;min-height:60px}
+  .opcoes{display:flex;gap:8px}
+  .opcoes button{flex:1;padding:12px;border-radius:12px;border:2px solid var(--linha);background:#fff;font:800 14px 'Nunito',sans-serif;cursor:pointer;color:var(--texto)}
+  .opcoes button.sel{border-color:var(--verde);background:var(--verde-claro);color:var(--verde-esc)}
+  .erro{color:#b3261e;font-size:13px;font-weight:700;margin-top:10px;min-height:18px}
+  .enviar{width:100%;margin-top:8px;background:#25a244;color:#fff;border:none;border-radius:14px;padding:16px;font:800 16px 'Nunito',sans-serif;cursor:pointer;display:flex;gap:8px;justify-content:center;align-items:center}
+  .pronto{text-align:center;padding:10px 0}
+  .pronto p{color:var(--suave);font-size:14px;margin-top:6px}
+  .pronto a{display:block;margin-top:14px;background:#25a244;color:#fff;text-decoration:none;border-radius:14px;padding:15px;font-weight:800}
+  footer{text-align:center;color:var(--suave);font-size:12px;margin:26px 0 10px}
+</style>
+</head>
+<body>
+
+<div class="demo">CARDÁPIO DE DEMONSTRAÇÃO · marca e preços fictícios</div>
+
+<header>
+  <div class="logo">🍛</div>
+  <h1>Marmitaria Sabor de Casa</h1>
+  <div class="slogan">Comida caseira, feita com carinho todo dia</div>
+  <div class="chips">
+    <span class="chip aberto">● Aberto · 11h às 14h</span>
+    <span class="chip">🛵 Delivery</span>
+    <span class="chip">🏠 Retirada</span>
+  </div>
+</header>
+
+<nav id="nav"></nav>
+<main id="cardapio"></main>
+<footer>Cardápio digital com pedido direto no WhatsApp</footer>
+
+<div class="barra">
+  <button id="verPedido" disabled>
+    <span><span class="badge" id="qtdTotal">0</span>Ver pedido</span>
+    <span id="valorBarra">R$ 0,00</span>
+  </button>
+</div>
+
+<div class="fundo" id="fundo">
+  <div class="painel" id="painel"></div>
+</div>
+
+<script>
+// ====== CONFIGURAÇÃO (troque pelos dados reais da loja) ======
+const CONFIG = {
+  whatsapp: "",          // ex.: "5519999999999" — vazio = o WhatsApp abre para escolher o contato
+  taxaEntrega: 5.00,
+  nomeLoja: "Marmitaria Sabor de Casa"
+};
+
+const CATEGORIAS = [
+  { id:"marmitas", nome:"Marmitas", itens:[
+    {id:1, emoji:"🍗", nome:"Frango grelhado", desc:"Arroz, feijão, frango grelhado, farofa e salada", preco:20, tag:"Mais pedido"},
+    {id:2, emoji:"🥩", nome:"Bife acebolado", desc:"Arroz, feijão, bife acebolado, batata frita e salada", preco:24},
+    {id:3, emoji:"🍝", nome:"Strogonoff de frango", desc:"Arroz, strogonoff, batata palha e salada", preco:22},
+    {id:4, emoji:"🐟", nome:"Peixe empanado", desc:"Arroz, feijão, filé de peixe, purê e salada", preco:25},
+    {id:5, emoji:"🥗", nome:"Fit de frango", desc:"Arroz integral, frango, legumes no vapor", preco:23},
+  ]},
+  { id:"extras", nome:"Adicionais", itens:[
+    {id:6, emoji:"🍳", nome:"Ovo frito", desc:"Unidade", preco:3},
+    {id:7, emoji:"🍟", nome:"Porção de batata frita", desc:"Porção pequena", preco:8},
+    {id:8, emoji:"🥚", nome:"Farofa extra", desc:"Potinho", preco:3},
+  ]},
+  { id:"bebidas", nome:"Bebidas", itens:[
+    {id:9, emoji:"🥤", nome:"Refrigerante lata", desc:"350 ml", preco:6},
+    {id:10, emoji:"🧃", nome:"Suco natural", desc:"500 ml — laranja ou limão", preco:8},
+    {id:11, emoji:"💧", nome:"Água", desc:"500 ml", preco:3},
+  ]},
+  { id:"sobremesas", nome:"Sobremesas", itens:[
+    {id:12, emoji:"🍮", nome:"Pudim", desc:"Fatia", preco:7},
+    {id:13, emoji:"🍫", nome:"Brigadeiro de colher", desc:"Potinho 150 g", preco:6},
+  ]},
+];
+
+const carrinho = {};
+let tipo = "delivery";
+const brl = v => v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const todos = CATEGORIAS.flatMap(c=>c.itens);
+
+function render(){
+  document.getElementById("nav").innerHTML = CATEGORIAS.map((c,i)=>
+    `<a href="#${c.id}" class="${i===0?'ativo':''}" data-cat="${c.id}">${c.nome}</a>`).join("");
+  document.getElementById("cardapio").innerHTML = CATEGORIAS.map(c=>`
+    <h2 id="${c.id}">${c.nome}</h2>
+    ${c.id==="marmitas"?'<div class="dia" style="margin-bottom:10px"><b>Prato do dia:</b> feijoada às quartas e sábados 🫘</div>':''}
+    ${c.itens.map(it=>`
+      <div class="item">
+        <div class="foto">${it.emoji}</div>
+        <div class="info">
+          <div class="nome">${it.nome}${it.tag?`<span class="tag">${it.tag}</span>`:''}</div>
+          <div class="desc">${it.desc}</div>
+          <div class="preco">${brl(it.preco)}</div>
+        </div>
+        <div class="qtd">
+          <button class="menos" data-id="${it.id}" data-d="-1" aria-label="Remover">−</button>
+          <span id="q${it.id}">0</span>
+          <button class="mais" data-id="${it.id}" data-d="1" aria-label="Adicionar">+</button>
+        </div>
+      </div>`).join("")}
+  `).join("");
+  atualizar();
+}
+
+function atualizar(){
+  let n=0, soma=0;
+  todos.forEach(it=>{
+    const q = carrinho[it.id]||0; n+=q; soma+=q*it.preco;
+    const s=document.getElementById("q"+it.id);
+    s.textContent=q; s.classList.toggle("zero",q===0);
+    s.previousElementSibling.classList.toggle("zero",q===0);
+  });
+  document.getElementById("qtdTotal").textContent=n;
+  document.getElementById("valorBarra").textContent=brl(soma);
+  document.getElementById("verPedido").disabled = n===0;
+}
+
+document.addEventListener("click",e=>{
+  const b=e.target.closest(".qtd button");
+  if(b){
+    const id=+b.dataset.id;
+    carrinho[id]=Math.max(0,(carrinho[id]||0)+(+b.dataset.d));
+    atualizar();
+  }
+  const a=e.target.closest("nav a");
+  if(a){
+    e.preventDefault();
+    document.getElementById(a.dataset.cat).scrollIntoView({behavior:"smooth"});
+  }
+});
+
+// destaca a categoria visível
+const obs=new IntersectionObserver(ents=>{
+  ents.forEach(en=>{ if(en.isIntersecting){
+    document.querySelectorAll("nav a").forEach(a=>a.classList.toggle("ativo",a.dataset.cat===en.target.id));
+  }});
+},{rootMargin:"-40% 0px -55% 0px"});
+
+function subtotal(){ return todos.reduce((s,it)=>s+(carrinho[it.id]||0)*it.preco,0); }
+
+function abrirCheckout(){
+  const itens = todos.filter(it=>carrinho[it.id]);
+  const sub = subtotal(), taxa = tipo==="delivery"?CONFIG.taxaEntrega:0;
+  document.getElementById("painel").innerHTML = `
+    <div class="topo"><h3>Seu pedido</h3><button class="fechar" id="fechar" aria-label="Fechar">✕</button></div>
+    ${itens.map(it=>`<div class="linha"><span>${carrinho[it.id]}x ${it.nome}</span><span>${brl(carrinho[it.id]*it.preco)}</span></div>`).join("")}
+    <div class="linha"><span>Entrega</span><span>${taxa?brl(taxa):"Grátis"}</span></div>
+    <div class="total"><span>Total</span><span>${brl(sub+taxa)}</span></div>
+
+    <label>Como quer receber?</label>
+    <div class="opcoes">
+      <button data-tipo="delivery" class="${tipo==='delivery'?'sel':''}">🛵 Delivery</button>
+      <button data-tipo="retirada" class="${tipo==='retirada'?'sel':''}">🏠 Retirada</button>
+    </div>
+
+    <label for="nome">Seu nome</label>
+    <input id="nome" placeholder="Ex.: Maria" autocomplete="name">
+
+    ${tipo==="delivery"?`
+    <label for="endereco">Endereço de entrega</label>
+    <input id="endereco" placeholder="Rua, número, bairro" autocomplete="street-address">`:""}
+
+    <label for="pagamento">Forma de pagamento</label>
+    <select id="pagamento">
+      <option>Pix</option><option>Cartão na entrega</option><option>Dinheiro</option>
+    </select>
+    <div id="trocoBox" style="display:none">
+      <label for="troco">Troco para quanto?</label>
+      <input id="troco" inputmode="decimal" placeholder="Ex.: 50">
+    </div>
+
+    <label for="obs">Observações</label>
+    <textarea id="obs" placeholder="Ex.: sem cebola, sem salada…"></textarea>
+
+    <div class="erro" id="erro"></div>
+    <button class="enviar" id="enviar">Enviar pedido pelo WhatsApp</button>
+  `;
+  document.getElementById("fundo").classList.add("on");
+  const pg=document.getElementById("pagamento");
+  pg.onchange=()=>document.getElementById("trocoBox").style.display=pg.value==="Dinheiro"?"block":"none";
+}
+
+function montarMensagem(){
+  const nome=document.getElementById("nome").value.trim();
+  const end=document.getElementById("endereco")?.value.trim()||"";
+  const pag=document.getElementById("pagamento").value;
+  const troco=document.getElementById("troco")?.value.trim();
+  const obs=document.getElementById("obs").value.trim();
+  const err=document.getElementById("erro");
+  if(!nome){err.textContent="Digite seu nome para continuar.";return null;}
+  if(tipo==="delivery"&&!end){err.textContent="Digite o endereço de entrega.";return null;}
+  err.textContent="";
+  const sub=subtotal(), taxa=tipo==="delivery"?CONFIG.taxaEntrega:0;
+  let m=`*Novo pedido — ${CONFIG.nomeLoja}*\n\n`;
+  todos.filter(it=>carrinho[it.id]).forEach(it=>{ m+=`• ${carrinho[it.id]}x ${it.nome} — ${brl(carrinho[it.id]*it.preco)}\n`; });
+  m+=`\nSubtotal: ${brl(sub)}\n`;
+  if(taxa) m+=`Entrega: ${brl(taxa)}\n`;
+  m+=`*Total: ${brl(sub+taxa)}*\n\n`;
+  m+=`👤 Nome: ${nome}\n`;
+  m+= tipo==="delivery" ? `🛵 Delivery: ${end}\n` : `🏠 Vou retirar no local\n`;
+  m+=`💳 Pagamento: ${pag}${pag==="Dinheiro"&&troco?` (troco para R$ ${troco})`:""}\n`;
+  if(obs) m+=`📝 Obs.: ${obs}\n`;
+  return m;
+}
+
+document.getElementById("verPedido").onclick=abrirCheckout;
+document.getElementById("fundo").addEventListener("click",e=>{
+  if(e.target.id==="fundo"||e.target.id==="fechar"){ document.getElementById("fundo").classList.remove("on"); return; }
+  const t=e.target.closest("[data-tipo]");
+  if(t){
+    const nome=document.getElementById("nome").value, obs=document.getElementById("obs").value;
+    tipo=t.dataset.tipo; abrirCheckout();
+    document.getElementById("nome").value=nome; document.getElementById("obs").value=obs;
+    return;
+  }
+  if(e.target.id==="enviar"){
+    const msg=montarMensagem(); if(!msg) return;
+    const url=`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`;
+    document.getElementById("painel").innerHTML=`
+      <div class="pronto">
+        <div style="font-size:44px">✅</div>
+        <h3 style="font-family:'Fraunces',serif;color:var(--verde-esc);font-size:21px;margin-top:6px">Pedido pronto!</h3>
+        <p>Toque no botão abaixo para abrir o WhatsApp com o pedido já escrito e é só enviar.</p>
+        <a href="${url}" target="_blank" rel="noopener">Abrir WhatsApp</a>
+        <button class="fechar" id="fechar" style="width:auto;padding:0 16px;border-radius:12px;margin-top:14px;height:40px">Voltar ao cardápio</button>
+      </div>`;
+  }
+});
+
+render();
+CATEGORIAS.forEach(c=>obs.observe(document.getElementById(c.id)));
+</script>
+</body>
+</html>
